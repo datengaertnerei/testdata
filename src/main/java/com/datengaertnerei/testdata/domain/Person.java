@@ -25,10 +25,13 @@ package com.datengaertnerei.testdata.domain;
 
 import java.time.LocalDate;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 
 /**
  * @author Jens
@@ -47,6 +50,8 @@ public class Person {
 	private String eyecolor;
 	private String email;
 
+	private PostalAddress address;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getId() {
@@ -119,6 +124,17 @@ public class Person {
 
 	public String getEmail() {
 		return email;
+	}
+	
+
+	@OneToOne(optional = true, cascade = CascadeType.DETACH)
+	@JoinColumn(name = "fk_address")
+	public PostalAddress getAddress() {
+		return address;
+	}
+
+	public void setAddress(PostalAddress address) {
+		this.address = address;
 	}
 
 	public Person() {

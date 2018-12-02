@@ -36,6 +36,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -45,8 +49,10 @@ import org.apache.commons.cli.ParseException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 
 import com.datengaertnerei.testdata.domain.Person;
+import com.datengaertnerei.testdata.domain.PostalAddress;
 
 /**
  * @author Jens
@@ -62,12 +68,15 @@ public class PersonGenerator {
 	private static final String FEMALE = "female";
 	private static final String MALE = "male";
 	private static final Object EMAIL_TEST = "@email.test";
+
 	private Random random;
 	private List<String> surnames;
 	private List<String> femaleNames;
 	private List<String> maleNames;
 	private List<String> eyecolors;
 
+	private List<PostalAddress> addressList;
+	
 	/**
 	 * @param args
 	 */
@@ -81,7 +90,6 @@ public class PersonGenerator {
 			return;
 		}
 
-		final SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
 		PersonGenerator p;
 		try {
 			p = new PersonGenerator();
@@ -89,15 +97,31 @@ public class PersonGenerator {
 			System.err.println("ERROR: Unable to initialize person generator: " + e);
 			return;
 		}
-		Session session = sessionFactory.openSession();
+		
+		// initialize persistence layer and fill address list
+		final SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+		Session session = sessionFactory.openSession();		
+		p.getAddressList(session);
+		
+		// create given amount of random person rows
 		for (int i = 0; i < amount; i++) {
 			session.save(p.createRandomPerson());
 		}
+		// shutdown persistence layer 
 		session.close();
 		sessionFactory.close();
 	}
 
-	public PersonGenerator() throws IOException {
+	private void getAddressList(Session session) {
+		CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+		CriteriaQuery<PostalAddress> criteriaQuery = criteriaBuilder.createQuery(PostalAddress.class);
+		Root<PostalAddress> root = criteriaQuery.from(PostalAddress.class);
+		criteriaQuery.select(root);
+		Query<PostalAddress> q = session.createQuery(criteriaQuery);
+		addressList = q.list();
+	}
+
+	private PersonGenerator() throws IOException {
 		surnames = loadValues(RES_SURNAMES);
 		femaleNames = loadValues(RES_FEMALE);
 		maleNames = loadValues(RES_MALE);
@@ -106,7 +130,7 @@ public class PersonGenerator {
 		random = new Random(System.currentTimeMillis());
 	}
 
-	public Person createRandomPerson() {
+	private Person createRandomPerson() {
 		String gender = random.nextBoolean() ? MALE : FEMALE;
 		String firstname;
 		if (MALE.equals(gender)) {
@@ -124,7 +148,10 @@ public class PersonGenerator {
 
 		int height = createRandomHeight(gender);
 
-		return new Person(firstname, surname, gender, dateOfBirth, (int) height, eyecolor, emailNorm);
+		Person randomPerson = new Person(firstname, surname, gender, dateOfBirth, (int) height, eyecolor, emailNorm);
+		randomPerson.setAddress(addressList.get(random.nextInt(addressList.size())));
+
+		return randomPerson;
 	}
 
 	private int createRandomHeight(String gender) {

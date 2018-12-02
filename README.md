@@ -25,7 +25,7 @@ java com.datengaertnerei.testdata.generator.PersonGenerator -a <amount of test p
 
 ```
 
-## Export of test data to MS Access file
+## Export of test data to MS Access file for Microsoft product environments
 
 ```java
 java com.datengaertnerei.testdata.util.AccessDatabaseExport 

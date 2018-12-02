@@ -80,7 +80,7 @@ public class AccessDatabaseExport {
 		List<Person> result = q.list();
 		List<Object[]> rows = new LinkedList<Object[]>();
 		for (Person p : result) {
-			Object[] row = new Object[7];
+			Object[] row = new Object[8];
 			row[0] = p.getId();
 			row[1] = p.getGivenName();
 			row[2] = p.getFamilyName();
@@ -88,6 +88,7 @@ public class AccessDatabaseExport {
 			row[4] = p.getGender();
 			row[5] = Date.valueOf(p.getBirthDate());
 			row[6] = p.getEmail();
+			row[7] = p.getAddress().getId();
 			rows.add(row);
 		}
 		return rows;
@@ -121,7 +122,8 @@ public class AccessDatabaseExport {
 				.addColumn(new ColumnBuilder("BirthName").setSQLType(Types.VARCHAR))
 				.addColumn(new ColumnBuilder("Gender").setSQLType(Types.VARCHAR))
 				.addColumn(new ColumnBuilder("BirthDate").setSQLType(Types.DATE))
-				.addColumn(new ColumnBuilder("Email").setSQLType(Types.VARCHAR)).toTable(db);
+				.addColumn(new ColumnBuilder("Email").setSQLType(Types.VARCHAR))
+				.addColumn(new ColumnBuilder("FK_Address").setSQLType(Types.INTEGER)).toTable(db);
 
 		personTable.addRows(rows);
 	}
