@@ -24,7 +24,6 @@ SOFTWARE.
 package com.datengaertnerei.testdata.generator;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
@@ -37,6 +36,8 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -55,6 +56,8 @@ import com.datengaertnerei.testdata.domain.PostalAddress;
  */
 public class OsmPbfAddressExport {
 
+	private static Log log = LogFactory.getLog(OsmPbfAddressExport.class);
+
 	private static final String COUNTRY = "DE";
 	private static final String ADDR_POSTCODE = "addr:postcode";
 	private static final String ADDR_HOUSENUMBER = "addr:housenumber";
@@ -63,11 +66,14 @@ public class OsmPbfAddressExport {
 	private static final String ADDR_COUNTRY = "addr:country";
 	private static final String OPT_FILE = "file";
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 		CommandLine commandLine = generateCommandLine(generateOptions(), args);
+		if (commandLine == null) {
+			return;
+		}
 		String fileName = commandLine.getOptionValue(OPT_FILE);
-		
-		Set<PostalAddress> unique = new ConcurrentSkipListSet<PostalAddress>();
+
+		Set<PostalAddress> uniqueAdresses = new ConcurrentSkipListSet<>();
 
 		File osmFile = new File(fileName);
 		PbfReader reader = new PbfReader(osmFile, 1);
@@ -78,92 +84,100 @@ public class OsmPbfAddressExport {
 
 				Entity entity = entityContainer.getEntity();
 				if (entity instanceof Node) {
-					Node node = (Node) entity;
-					Collection<Tag> tags = node.getTags();
-					String country = null;
-					String city = null;
-					String street = null;
-					String housenumber = null;
-					String postcode = null;
-					int tagCount = 0;
-					for (Tag tag : tags) {
-						if (tag.getKey().equals(ADDR_COUNTRY)) {
-							country = tag.getValue();
-							tagCount++;
-						}
-						if (tag.getKey().equals(ADDR_CITY)) {
-							city = tag.getValue();
-							tagCount++;
-						}
-						if (tag.getKey().equals(ADDR_STREET)) {
-							street = tag.getValue();
-							tagCount++;
-						}
-						if (tag.getKey().equals(ADDR_HOUSENUMBER)) {
-							housenumber = tag.getValue();
-							tagCount++;
-						}
-						if (tag.getKey().equals(ADDR_POSTCODE)) {
-							postcode = tag.getValue();
-							tagCount++;
-						}
+					processNode(uniqueAdresses, entity);
+				}
+			}
 
-						if (tagCount > 4 && country.equals(COUNTRY)) {
+			private void processNode(Set<PostalAddress> unique, Entity entity) {
+				Node node = (Node) entity;
+				Collection<Tag> tags = node.getTags();
+				String country = null;
+				String city = null;
+				String street = null;
+				String housenumber = null;
+				String postcode = null;
+				int tagCount = 0;
+				for (Tag tag : tags) {
+					switch (tag.getKey()) {
+					case ADDR_COUNTRY:
+						country = tag.getValue();
+						tagCount++;
+						break;
+					case ADDR_CITY:
+						city = tag.getValue();
+						tagCount++;
+						break;
+					case ADDR_STREET:
+						street = tag.getValue();
+						tagCount++;
+						break;
+					case ADDR_HOUSENUMBER:
+						housenumber = tag.getValue();
+						tagCount++;
+						break;
+					case ADDR_POSTCODE:
+						postcode = tag.getValue();
+						tagCount++;
+						break;
 
-							PostalAddress pa = new PostalAddress(country, city, postcode, street, housenumber);
-							unique.add(pa);
-						}
+					default: // just skip to the next tag
+					}
+
+					if (tagCount > 4 && country != null && country.equals(COUNTRY)) {
+
+						PostalAddress pa = new PostalAddress(country, city, postcode, street, housenumber);
+						unique.add(pa);
 					}
 				}
 			}
 
 			@Override
 			public void initialize(Map<String, Object> metaData) {
-
+				// just to comply with the interface
 			}
 
 			@Override
 			public void complete() {
-
+				// just to comply with the interface
 			}
 
 			@Override
 			public void close() {
-
+				// just to comply with the interface
 			}
 		};
 
 		reader.setSink(sinkImplementation);
 		reader.run();
 
+		saveUniqueAddresses(uniqueAdresses);
+
+	}
+
+	private static void saveUniqueAddresses(Set<PostalAddress> uniqueAdresses) {
 		final SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
 		Session session = sessionFactory.openSession();
-		
-		for(PostalAddress address : unique) {
+
+		for (PostalAddress address : uniqueAdresses) {
 			session.save(address);
 		}
-		
+
 		session.close();
 		sessionFactory.close();
-		
 	}
 
 	/**
 	 * "Definition" stage of command-line parsing with Apache Commons CLI.
+	 * 
 	 * @return Definition of command-line options.
 	 */
-	private static Options generateOptions()
-	{
-	   final Option fileOption = Option.builder("f")
-	      .required()
-	      .hasArg()
-	      .longOpt(OPT_FILE)
-	      .desc("File to be processed.")
-	      .build();
-	   final Options options = new Options();
-	   options.addOption(fileOption);
-	   return options;
-	}	
+	private static Options generateOptions() {
+		final Option fileOption = Option.builder("f").required().hasArg().longOpt(OPT_FILE)
+				.desc("File to be processed.").build();
+		final Options options = new Options();
+		options.addOption(fileOption);
+		return options;
+	}
 
 	/**
 	 * "Parsing" stage of command-line processing demonstrated with Apache Commons
@@ -181,9 +195,9 @@ public class OsmPbfAddressExport {
 		try {
 			commandLine = cmdLineParser.parse(options, commandLineArguments);
 		} catch (ParseException parseException) {
-			System.err.println("ERROR: Unable to parse command-line arguments " + Arrays.toString(commandLineArguments)
-					+ " due to: " + parseException);
+			log.error("Unable to parse command-line arguments " + Arrays.toString(commandLineArguments),
+					parseException);
 		}
 		return commandLine;
-	}	
+	}
 }

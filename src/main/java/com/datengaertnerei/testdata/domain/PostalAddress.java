@@ -114,4 +114,20 @@ public class PostalAddress implements Comparable<PostalAddress> {
 		return match.compareTo(other);
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof PostalAddress) {
+			return compareTo((PostalAddress) o) == 0;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		StringBuilder content = new StringBuilder().append(this.getAddressCountry()).append(this.getAddressLocality())
+				.append(this.getPostalCode()).append(this.getStreetAddress()).append(this.getHouseNumber());
+		return content.hashCode();
+	}
+
 }

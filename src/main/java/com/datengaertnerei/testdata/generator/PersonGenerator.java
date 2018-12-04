@@ -46,6 +46,8 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -59,6 +61,8 @@ import com.datengaertnerei.testdata.domain.PostalAddress;
  *
  */
 public class PersonGenerator {
+
+	private static Log log = LogFactory.getLog(PersonGenerator.class);
 
 	private static final String RES_EYECOLORS = "eyecolors.txt";
 	private static final String RES_MALE = "male.txt";
@@ -76,17 +80,20 @@ public class PersonGenerator {
 	private List<String> eyecolors;
 
 	private List<PostalAddress> addressList;
-	
+
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		CommandLine commandLine = generateCommandLine(generateOptions(), args);
+		if (commandLine == null) {
+			return;
+		}
 		int amount = 0;
 		try {
 			amount = Integer.parseInt(commandLine.getOptionValue(OPT_AMOUNT));
 		} catch (NumberFormatException e) {
-			System.err.println("ERROR: Unable to parse amount option: " + e);
+			log.error("Unable to parse amount option.", e);
 			return;
 		}
 
@@ -94,20 +101,20 @@ public class PersonGenerator {
 		try {
 			p = new PersonGenerator();
 		} catch (IOException e) {
-			System.err.println("ERROR: Unable to initialize person generator: " + e);
+			log.error("Unable to initialize person generator.", e);
 			return;
 		}
-		
+
 		// initialize persistence layer and fill address list
 		final SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
-		Session session = sessionFactory.openSession();		
+		Session session = sessionFactory.openSession();
 		p.getAddressList(session);
-		
+
 		// create given amount of random person rows
 		for (int i = 0; i < amount; i++) {
 			session.save(p.createRandomPerson());
 		}
-		// shutdown persistence layer 
+		// shutdown persistence layer
 		session.close();
 		sessionFactory.close();
 	}
@@ -142,7 +149,7 @@ public class PersonGenerator {
 		String eyecolor = eyecolors.get(random.nextInt(eyecolors.size())).trim();
 
 		LocalDate dateOfBirth = createRandomDateOfBirth();
-		StringBuffer email = new StringBuffer(firstname).append(surname).append(dateOfBirth.getYear())
+		StringBuilder email = new StringBuilder().append(firstname).append(surname).append(dateOfBirth.getYear())
 				.append(EMAIL_TEST);
 		String emailNorm = Normalizer.normalize(email.toString(), Form.NFKC).replaceAll("[^\\p{ASCII}]", "");
 
@@ -192,16 +199,16 @@ public class PersonGenerator {
 		case 11:
 			day = random.nextInt(29) + 1;
 			break;
+		default: // there is no other month
 		}
-		LocalDate dateOfBirth = LocalDate.of(LocalDate.now().getYear() - (int) Math.round(age), month, day);
 
-		return dateOfBirth;
+		return LocalDate.of(LocalDate.now().getYear() - (int) Math.round(age), month, day);
 	}
 
 	private List<String> loadValues(String fileName) throws IOException {
 		InputStream input = getClass().getResourceAsStream(fileName);
 		BufferedReader r = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8));
-		ArrayList<String> values = new ArrayList<String>();
+		ArrayList<String> values = new ArrayList<>();
 		String line;
 		while ((line = r.readLine()) != null) {
 			values.add(line);
@@ -240,8 +247,8 @@ public class PersonGenerator {
 		try {
 			commandLine = cmdLineParser.parse(options, commandLineArguments);
 		} catch (ParseException parseException) {
-			System.err.println("ERROR: Unable to parse command-line arguments " + Arrays.toString(commandLineArguments)
-					+ " due to: " + parseException);
+			log.error("Unable to parse command-line arguments " + Arrays.toString(commandLineArguments),
+					parseException);
 		}
 		return commandLine;
 	}

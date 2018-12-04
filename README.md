@@ -1,3 +1,5 @@
+[![DepShield Badge](https://depshield.sonatype.org/badges/datengaertnerei/testdata/depshield.svg)](https://depshield.github.io)
+
 # Testdata Generator
 
 Generator for german person and address test data. It uses [OpenStreetMap](https://www.openstreetmap.org/) data to provide valid addresses as well as lists of names and personal attributes.

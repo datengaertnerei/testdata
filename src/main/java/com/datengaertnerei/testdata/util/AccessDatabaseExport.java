@@ -35,6 +35,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -50,6 +52,8 @@ import com.healthmarketscience.jackcess.TableBuilder;
 
 public class AccessDatabaseExport {
 
+	private static Log log = LogFactory.getLog(AccessDatabaseExport.class);
+	
 	public static void main(String[] args) {
 
 		final SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
@@ -66,8 +70,7 @@ public class AccessDatabaseExport {
 
 			db.close();
 		} catch (IOException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Could not save to file.", e);
 		}
 	}
 
@@ -78,7 +81,7 @@ public class AccessDatabaseExport {
 		criteriaQuery.select(root);
 		Query<Person> q = session.createQuery(criteriaQuery);
 		List<Person> result = q.list();
-		List<Object[]> rows = new LinkedList<Object[]>();
+		List<Object[]> rows = new LinkedList<>();
 		for (Person p : result) {
 			Object[] row = new Object[8];
 			row[0] = p.getId();
@@ -101,7 +104,7 @@ public class AccessDatabaseExport {
 		criteriaQuery.select(root);
 		Query<PostalAddress> q = session.createQuery(criteriaQuery);
 		List<PostalAddress> result = q.list();
-		List<Object[]> rows = new LinkedList<Object[]>();
+		List<Object[]> rows = new LinkedList<>();
 		for (PostalAddress p : result) {
 			Object[] row = new Object[7];
 			row[0] = p.getId();
