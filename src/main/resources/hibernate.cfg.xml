@@ -29,6 +29,7 @@
         
         <!-- Mapping files -->
         <mapping class="com.datengaertnerei.testdata.domain.Person"/>
+        <mapping class="com.datengaertnerei.testdata.domain.LegalEntity"/>
         <mapping class="com.datengaertnerei.testdata.domain.PostalAddress"/>
     </session-factory>
 </hibernate-configuration>
