@@ -27,6 +27,15 @@ java com.datengaertnerei.testdata.generator.PersonGenerator -a <amount of test p
 
 ```
 
+## 3. Step: Export legal entities with addresses from gleif.org to your database
+
+You need to download level 1 LEI Data from [GLEIF](https://www.gleif.org/en/lei-data/gleif-concatenated-file/download-the-concatenated-file#). 
+
+```java
+java com.datengaertnerei.testdata.generator.GleifLegalEntityExport -f 20181207-gleif-concatenated-file-lei2.xml
+
+```
+
 ## Export of test data to MS Access file for Microsoft product environments
 
 ```java
