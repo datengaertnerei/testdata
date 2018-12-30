@@ -24,7 +24,6 @@ SOFTWARE.
 package com.datengaertnerei.testdata.domain;
 
 import java.time.LocalDate;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -34,120 +33,137 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 /**
- * @author Jens
+ * Person entity class for persistence inspired by <a href="https://schema.org/Person">person
+ * schema</a>.
  *
+ * @author Jens Dibbern
  */
 @Entity
 public class Person {
 
-	private int id;
-	private String givenName;
-	private String familyName;
-	private String birthName;
-	private String gender;
-	private LocalDate birthDate;
-	private int height;
-	private String eyecolor;
-	private String email;
+  private int id;
+  private String givenName;
+  private String familyName;
+  private String birthName;
+  private String gender;
+  private LocalDate birthDate;
+  private int height;
+  private String eyecolor;
+  private String email;
 
-	private PostalAddress address;
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public int getId() {
-		return id;
-	}
+  private PostalAddress address;
 
-	public void setId(int id) {
-		this.id = id;
-	}
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  public int getId() {
+    return id;
+  }
 
-	public String getGivenName() {
-		return givenName;
-	}
+  public void setId(int id) {
+    this.id = id;
+  }
 
-	public void setGivenName(String givenName) {
-		this.givenName = givenName;
-	}
+  public String getGivenName() {
+    return givenName;
+  }
 
-	public String getFamilyName() {
-		return familyName;
-	}
+  public void setGivenName(String givenName) {
+    this.givenName = givenName;
+  }
 
-	public void setFamilyName(String familyName) {
-		this.familyName = familyName;
-	}
+  public String getFamilyName() {
+    return familyName;
+  }
 
-	public String getBirthName() {
-		return birthName;
-	}
+  public void setFamilyName(String familyName) {
+    this.familyName = familyName;
+  }
 
-	public void setBirthName(String birthName) {
-		this.birthName = birthName;
-	}
+  public String getBirthName() {
+    return birthName;
+  }
 
-	public String getGender() {
-		return gender;
-	}
+  public void setBirthName(String birthName) {
+    this.birthName = birthName;
+  }
 
-	public void setGender(String gender) {
-		this.gender = gender;
-	}
+  public String getGender() {
+    return gender;
+  }
 
-	public LocalDate getBirthDate() {
-		return birthDate;
-	}
+  public void setGender(String gender) {
+    this.gender = gender;
+  }
 
-	public void setBirthDate(LocalDate birthDate) {
-		this.birthDate = birthDate;
-	}
+  public LocalDate getBirthDate() {
+    return birthDate;
+  }
 
-	public int getHeight() {
-		return height;
-	}
+  public void setBirthDate(LocalDate birthDate) {
+    this.birthDate = birthDate;
+  }
 
-	public void setHeight(int height) {
-		this.height = height;
-	}
+  public int getHeight() {
+    return height;
+  }
 
-	public String getEyecolor() {
-		return eyecolor;
-	}
+  public void setHeight(int height) {
+    this.height = height;
+  }
 
-	public void setEyecolor(String eyecolor) {
-		this.eyecolor = eyecolor;
-	}
+  public String getEyecolor() {
+    return eyecolor;
+  }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+  public void setEyecolor(String eyecolor) {
+    this.eyecolor = eyecolor;
+  }
 
-	public String getEmail() {
-		return email;
-	}
-	
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-	@OneToOne(optional = true, cascade = CascadeType.DETACH)
-	@JoinColumn(name = "fk_address")
-	public PostalAddress getAddress() {
-		return address;
-	}
+  public String getEmail() {
+    return email;
+  }
 
-	public void setAddress(PostalAddress address) {
-		this.address = address;
-	}
+  @OneToOne(optional = true, cascade = CascadeType.DETACH)
+  @JoinColumn(name = "fk_address")
+  public PostalAddress getAddress() {
+    return address;
+  }
 
-	public Person() {
-	}
+  public void setAddress(PostalAddress address) {
+    this.address = address;
+  }
 
-	public Person(String firstname, String surname, String gender, LocalDate birthDate, int height, String eyecolor,
-			String email) {
-		this.givenName = firstname;
-		this.familyName = surname;
-		this.gender = gender;
-		this.birthDate = birthDate;
-		this.height = height;
-		this.eyecolor = eyecolor;
-		this.email = email;
-	}
+  public Person() {}
+
+  /**
+   * Ctor with values.
+   *
+   * @param givenName given name attribute value
+   * @param familyName family name attribute value
+   * @param gender gender attribute value
+   * @param birthDate date of birth attribute value
+   * @param height height attribute value
+   * @param eyecolor eyecolor attribute value
+   * @param email email address attribute value
+   */
+  public Person(
+      String givenName,
+      String familyName,
+      String gender,
+      LocalDate birthDate,
+      int height,
+      String eyecolor,
+      String email) {
+    this.givenName = givenName;
+    this.familyName = familyName;
+    this.gender = gender;
+    this.birthDate = birthDate;
+    this.height = height;
+    this.eyecolor = eyecolor;
+    this.email = email;
+  }
 }

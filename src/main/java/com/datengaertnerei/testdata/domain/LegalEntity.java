@@ -31,73 +31,84 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
+/**
+ * Legal entity class for persistence see <a href="https://schema.org/leiCode">leiCode schema</a>
+ * for other usage.
+ *
+ * @author Jens Dibbern
+ */
 @Entity
 public class LegalEntity {
 
-	private static final int MAX_NAME_LEN = 250;
-	private int id;
-	String legalEntityIdentifier;
-	String name;
-	String legalForm;
+  private static final int MAX_NAME_LEN = 250;
+  private int id;
+  String legalEntityIdentifier;
+  String name;
+  String legalForm;
 
-	PostalAddress legalAddress;
-	PostalAddress headquarterAddress;
+  PostalAddress legalAddress;
+  PostalAddress headquarterAddress;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public int getId() {
-		return id;
-	}
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  public int getId() {
+    return id;
+  }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+  public void setId(int id) {
+    this.id = id;
+  }
 
-	public String getLegalEntityIdentifier() {
-		return legalEntityIdentifier;
-	}
+  public String getLegalEntityIdentifier() {
+    return legalEntityIdentifier;
+  }
 
-	public void setLegalEntityIdentifier(String legalEntityIdentifier) {
-		this.legalEntityIdentifier = legalEntityIdentifier;
-	}
+  public void setLegalEntityIdentifier(String legalEntityIdentifier) {
+    this.legalEntityIdentifier = legalEntityIdentifier;
+  }
 
-	public String getName() {
-		return name;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public void setName(String name) {
-		if (name != null && name.length() > MAX_NAME_LEN) {
-			this.name = name.substring(0, MAX_NAME_LEN);
-		} else {
-			this.name = name;
-		}
-	}
+  /**
+   * Sets name attribute and cuts off at MAX_NAME_LEN.
+   *
+   * @param name new name attribute value
+   */
+  public void setName(String name) {
+    if (name != null && name.length() > MAX_NAME_LEN) {
+      this.name = name.substring(0, MAX_NAME_LEN);
+    } else {
+      this.name = name;
+    }
+  }
 
-	public String getLegalForm() {
-		return legalForm;
-	}
+  public String getLegalForm() {
+    return legalForm;
+  }
 
-	public void setLegalForm(String legalForm) {
-		this.legalForm = legalForm;
-	}
+  public void setLegalForm(String legalForm) {
+    this.legalForm = legalForm;
+  }
 
-	@OneToOne(optional = true, cascade = CascadeType.DETACH)
-	@JoinColumn(name = "fk_lg_address")
-	public PostalAddress getLegalAddress() {
-		return legalAddress;
-	}
+  @OneToOne(optional = true, cascade = CascadeType.DETACH)
+  @JoinColumn(name = "fk_lg_address")
+  public PostalAddress getLegalAddress() {
+    return legalAddress;
+  }
 
-	public void setLegalAddress(PostalAddress legalAddress) {
-		this.legalAddress = legalAddress;
-	}
+  public void setLegalAddress(PostalAddress legalAddress) {
+    this.legalAddress = legalAddress;
+  }
 
-	@OneToOne(optional = true, cascade = CascadeType.DETACH)
-	@JoinColumn(name = "fk_hq_address")
-	public PostalAddress getHeadquarterAddress() {
-		return headquarterAddress;
-	}
+  @OneToOne(optional = true, cascade = CascadeType.DETACH)
+  @JoinColumn(name = "fk_hq_address")
+  public PostalAddress getHeadquarterAddress() {
+    return headquarterAddress;
+  }
 
-	public void setHeadquarterAddress(PostalAddress headquarterAddress) {
-		this.headquarterAddress = headquarterAddress;
-	}
+  public void setHeadquarterAddress(PostalAddress headquarterAddress) {
+    this.headquarterAddress = headquarterAddress;
+  }
 }
