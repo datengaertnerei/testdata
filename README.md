@@ -1,4 +1,4 @@
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/3d6a88390ce6414d810825d566ebe4a7)](https://app.codacy.com/app/datengaertnerei/testdata?utm_source=github.com&utm_medium=referral&utm_content=datengaertnerei/testdata&utm_campaign=Badge_Grade_Dashboard)
+
 [![Dependencies](https://img.shields.io/librariesio/github/datengaertnerei/testdata.svg)](https://libraries.io/github/datengaertnerei/testdata)
 [![DepShield Badge](https://depshield.sonatype.org/badges/datengaertnerei/testdata/depshield.svg)](https://depshield.github.io)
 [![License Badge](https://img.shields.io/github/license/datengaertnerei/testdata.svg)](https://mit-license.org/)
