@@ -6,9 +6,9 @@ Persistence layer is [Hibernate](http://hibernate.org/orm/) and default setup st
 
 Reasons for using test data can be
 
-- [General Data Protection Regulation](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32016R0679) compliance
+  - [General Data Protection Regulation](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32016R0679) compliance
 
-- need for a larger data set
+  - need for a larger data set
 
-- need for specific data matching test requirements
+  - need for specific data matching test requirements
 

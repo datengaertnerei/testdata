@@ -83,9 +83,9 @@ public class AccessDatabaseExport {
 
   /**
    * Loads previously persisted person records.
-   * 
+   *
    * @param session Hibernate persistence session
-   * @return persons objects as list of object arrays  
+   * @return persons objects as list of object arrays
    */
   private static List<Object[]> getPersonRows(Session session) {
     CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
@@ -112,9 +112,9 @@ public class AccessDatabaseExport {
 
   /**
    * Loads previously persisted postal address records.
-   * 
+   *
    * @param session Hibernate persistence session
-   * @return postal address objects as list of object arrays  
+   * @return postal address objects as list of object arrays
    */
   private static List<Object[]> getPostalAddressRows(Session session) {
     CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
@@ -139,7 +139,7 @@ public class AccessDatabaseExport {
 
   /**
    * Saves person records to database file.
-   * 
+   *
    * @param rows persons as list of object arrays
    * @param db jackcess database object
    * @throws IOException file operation failed, fix and try again
@@ -164,7 +164,7 @@ public class AccessDatabaseExport {
 
   /**
    * Saves postal address records to database file.
-   * 
+   *
    * @param rows postal addresses as list of object arrays
    * @param db jackcess database object
    * @throws IOException file operation failed, fix and try again

@@ -42,9 +42,9 @@ public class LegalEntity {
 
   private static final int MAX_NAME_LEN = 250;
   private int id;
-  String legalEntityIdentifier;
-  String name;
-  String legalForm;
+  private String legalEntityIdentifier;
+  private String name;
+  private String legalForm;
 
   PostalAddress legalAddress;
   PostalAddress headquarterAddress;
