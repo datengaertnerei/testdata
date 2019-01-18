@@ -1,4 +1,7 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/3d6a88390ce6414d810825d566ebe4a7)](https://app.codacy.com/app/datengaertnerei/testdata?utm_source=github.com&utm_medium=referral&utm_content=datengaertnerei/testdata&utm_campaign=Badge_Grade_Dashboard)
+[![Dependencies](https://img.shields.io/librariesio/github/datengaertnerei/testdata.svg)](https://libraries.io/github/datengaertnerei/testdata)
 [![DepShield Badge](https://depshield.sonatype.org/badges/datengaertnerei/testdata/depshield.svg)](https://depshield.github.io)
+[![License Badge](https://img.shields.io/github/license/datengaertnerei/testdata.svg)](https://mit-license.org/)
 
 # Testdata Generator
 
@@ -44,27 +47,3 @@ java com.datengaertnerei.testdata.util.AccessDatabaseExport
 ```
 
 Example data is derived from OpenStreetMap data and available under [Open Database License](https://opendatacommons.org/licenses/odbl/).
-
-## License
-
-MIT License
-
-Copyright (c) 2018 Jens Dibbern
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
