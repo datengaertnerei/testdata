@@ -4,7 +4,7 @@
 [![DepShield Badge](https://depshield.sonatype.org/badges/datengaertnerei/testdata/depshield.svg)](https://depshield.github.io)
 [![License Badge](https://img.shields.io/github/license/datengaertnerei/testdata.svg)](https://mit-license.org/)
 
-# Testdata Generator
+# Test data from public sources 
 
 Generator for german person and address test data. It uses [OpenStreetMap](https://www.openstreetmap.org/) data to provide valid addresses as well as lists of names and personal attributes.
 
@@ -15,36 +15,12 @@ Reasons for using test data can be
   * need for a larger data set
   * need for specific data matching test requirements
 
-## 1. Step: Export valid address data from OpenStreetMap
 
-You need to download an OSM file from [Geofabrik](https://download.geofabrik.de/europe.html) or another provider of OpenStreetMap dumps.
-
-```java
-java -Xmx2G com.datengaertnerei.testdata.generator.OsmPbfAddressExport -f europe-latest.osm.pbf 
-
-```
-
-## 2. Step: Generate random persons and attach addresses
-
-```java
-java com.datengaertnerei.testdata.generator.PersonGenerator -a <amount of test person rows>
-
-```
-
-## 3. Step: Export legal entities with addresses from gleif.org to your database
+# Export legal entities with addresses from gleif.org 
 
 You need to download level 1 LEI Data from [GLEIF](https://www.gleif.org/en/lei-data/gleif-concatenated-file/download-the-concatenated-file#). 
 
 ```java
-java com.datengaertnerei.testdata.generator.GleifLegalEntityExport -f 20181207-gleif-concatenated-file-lei2.xml
+java com.datengaertnerei.testdata.generator.GleifLegalEntityExport -f <yyyymmdd>-gleif-concatenated-file-lei2.xml
 
 ```
-
-## Export of test data to MS Access file for Microsoft product environments
-
-```java
-java com.datengaertnerei.testdata.util.AccessDatabaseExport 
-
-```
-
-Example data is derived from OpenStreetMap data and available under [Open Database License](https://opendatacommons.org/licenses/odbl/).
